@@ -18,8 +18,9 @@ export default function FloatingNav() {
   const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Start middle-left instead of bottom-left
-    setPosition({ x: 24, y: (window.innerHeight - 240) / 2 });
+    if (typeof window !== "undefined") {
+      setPosition({ x: 24, y: (window.innerHeight - 240) / 2 });
+    }
   }, []);
 
   const handleDragStart = (clientX: number, clientY: number) => {
@@ -56,7 +57,7 @@ export default function FloatingNav() {
     if (isDragging) {
       window.addEventListener("mousemove", onMouseMove);
       window.addEventListener("mouseup", onMouseUp);
-      window.addEventListener("touchmove", onTouchMove);
+      window.addEventListener("touchmove", onTouchMove, { passive: false });
       window.addEventListener("touchend", onTouchEnd);
     }
 
@@ -66,7 +67,7 @@ export default function FloatingNav() {
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("touchend", onTouchEnd);
     };
-  }, [isDragging]);
+  }, [isDragging, position.x, position.y]);
 
   return (
     <div
